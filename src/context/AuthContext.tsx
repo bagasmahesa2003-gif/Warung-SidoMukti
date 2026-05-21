@@ -22,11 +22,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(false);
       return;
     }
-    const unsubscribe = onAuthStateChanged(auth, (u) => {
-      setUser(u);
-      setLoading(false);
+    
+    let unsubscribe: () => void;
+    
+    // Set persistence first, then attach the listener
+    import('firebase/auth').then(({ setPersistence, browserLocalPersistence }) => {
+      setPersistence(auth, browserLocalPersistence)
+        .then(() => {
+          unsubscribe = onAuthStateChanged(auth, (u) => {
+            setUser(u);
+            setLoading(false);
+          });
+        })
+        .catch((err) => {
+          console.error("Persistence error", err);
+          unsubscribe = onAuthStateChanged(auth, (u) => {
+            setUser(u);
+            setLoading(false);
+          });
+        });
     });
-    return unsubscribe;
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
   }, []);
 
   const loginMock = (role: 'admin' | 'buyer' = 'admin') => {

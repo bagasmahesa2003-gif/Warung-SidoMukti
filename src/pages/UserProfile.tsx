@@ -8,11 +8,13 @@ import { collection, query, onSnapshot, orderBy, where } from 'firebase/firestor
 import { signOut } from 'firebase/auth';
 
 export const UserProfile = () => {
-  const { user, logoutMock } = useAuth();
+  const { user, loading, logoutMock } = useAuth();
   const navigate = useNavigate();
   const [orders, setOrders] = useState<Order[]>([]);
 
   useEffect(() => {
+    if (loading) return;
+    
     if (!user) {
       navigate('/login');
       return;
@@ -30,13 +32,21 @@ export const UserProfile = () => {
     }, (error) => console.error(error));
 
     return () => unsubscribe();
-  }, [user, navigate]);
+  }, [user, loading, navigate]);
 
   const handleLogout = () => {
     if (!auth) logoutMock();
     else signOut(auth);
     navigate('/');
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-green-600 border-t-transparent"></div>
+      </div>
+    );
+  }
 
   if (!user) return null;
 

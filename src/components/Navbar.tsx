@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext';
 
 export const Navbar = () => {
   const { cart } = useCart();
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
 
   const totalItems = cart.reduce((temp, item) => temp + item.quantity, 0);
 
@@ -34,12 +34,18 @@ export const Navbar = () => {
               )}
             </Link>
 
-            <Link 
-              to={user ? ((user.email && ['bagasmahesa2003@gmail.com', 'anggoromukti18@gmail.com'].includes(user.email)) || (user as any).role === 'admin' ? "/admin" : "/user-profile") : "/login"} 
-              className="p-2 text-gray-600 hover:text-green-600 transition-colors"
-            >
-              <UserIcon className="h-6 w-6" />
-            </Link>
+            {!loading ? (
+              <Link 
+                to={user ? ((user.email && ['bagasmahesa2003@gmail.com', 'anggoromukti18@gmail.com'].includes(user.email)) || (user as any).role === 'admin' ? "/admin" : "/user-profile") : "/login"} 
+                className="p-2 text-gray-600 hover:text-green-600 transition-colors"
+              >
+                <UserIcon className="h-6 w-6" />
+              </Link>
+            ) : (
+              <div className="p-2 text-transparent">
+                <UserIcon className="h-6 w-6" />
+              </div>
+            )}
           </div>
         </div>
       </div>
