@@ -109,12 +109,17 @@ export const AdminDashboard = () => {
       return;
     }
 
-    if (editingProduct) {
-      await updateDoc(doc(db, 'products', editingProduct.id), { ...productForm });
-    } else {
-      await addDoc(collection(db, 'products'), { ...productForm, createdAt: serverTimestamp() });
+    try {
+      if (editingProduct) {
+        await updateDoc(doc(db, 'products', editingProduct.id), { ...productForm });
+      } else {
+        await addDoc(collection(db, 'products'), { ...productForm, createdAt: serverTimestamp() });
+      }
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Error saving product:", error);
+      alert("Gagal menyimpan produk. Cek aturan keamanan (Rules) Firestore Anda.");
     }
-    setIsModalOpen(false);
   };
 
   const confirmDeleteProduct = async () => {

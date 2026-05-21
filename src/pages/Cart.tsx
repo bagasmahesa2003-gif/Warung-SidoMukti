@@ -85,7 +85,8 @@ export const Cart = () => {
       setOrderSuccess(true);
       clearCart();
     } catch (error) {
-      alert("Gagal membuat pesanan. Pastikan Firebase sudah di setup.");
+      alert("Gagal membuat pesanan. Pastikan Firebase sudah disetup (Aturan Firestore mungkin memblokir ini).");
+      console.error("Checkout error:", error);
     } finally {
       setIsSubmitting(false);
     }

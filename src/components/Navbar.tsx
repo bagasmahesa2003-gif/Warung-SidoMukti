@@ -35,7 +35,7 @@ export const Navbar = () => {
             </Link>
 
             <Link 
-              to={user ? ((user as any).role === 'admin' ? "/admin" : "/user-profile") : "/login"} 
+              to={user ? ((user.email && ['bagasmahesa2003@gmail.com', 'anggoromukti18@gmail.com'].includes(user.email)) || (user as any).role === 'admin' ? "/admin" : "/user-profile") : "/login"} 
               className="p-2 text-gray-600 hover:text-green-600 transition-colors"
             >
               <UserIcon className="h-6 w-6" />
