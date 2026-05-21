@@ -61,6 +61,8 @@ export const Cart = () => {
       }
 
       const orderData = {
+        userId: user.uid,
+        userEmail: user.email || '',
         customerName: formData.name,
         address: formData.deliveryMethod === 'pickup' ? 'Ambil di Toko' : formData.address,
         phone: formData.deliveryMethod === 'pickup' ? '-' : formData.phone,

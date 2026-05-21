@@ -19,10 +19,14 @@ export const Home = () => {
       window.addEventListener('mock_data_updated', updateProducts);
       return () => window.removeEventListener('mock_data_updated', updateProducts);
     }
-    const q = query(collection(db, 'products'), orderBy('createdAt', 'desc'));
-    
-    const unsubscribe = onSnapshot(q, (snapshot) => {
+    const unsubscribe = onSnapshot(collection(db, 'products'), (snapshot) => {
       const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product));
+      // Sort client side to handle items without createdAt safely
+      data.sort((a, b) => {
+        const timeA = a.createdAt ? (typeof a.createdAt === 'number' ? a.createdAt : (a.createdAt as any).toDate?.().getTime() || 0) : 0;
+        const timeB = b.createdAt ? (typeof b.createdAt === 'number' ? b.createdAt : (b.createdAt as any).toDate?.().getTime() || 0) : 0;
+        return timeB - timeA;
+      });
       setProducts(data);
     }, (error) => {
       console.warn("Error fetching products:", error.message);

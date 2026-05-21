@@ -1,0 +1,28 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null && (
+        request.auth.token.email == 'bagasmahesa2003@gmail.com' ||
+        request.auth.token.email == 'anggoromukti18@gmail.com'
+      );
+    }
+
+    match /products/{productId} {
+      allow read: if true;
+      allow update: if isAdmin() || (
+        request.auth != null &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['stock'])
+      );
+      allow create, delete: if isAdmin();
+    }
+
+    match /orders/{orderId} {
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+      allow read: if isAdmin() || (request.auth != null && request.auth.uid == resource.data.userId);
+      allow update, delete: if isAdmin();
+    }
+  }
+}

@@ -135,7 +135,7 @@ export const AdminDashboard = () => {
 
   const todayStats = orders.reduce(
     (acc, order) => {
-      const orderDate = new Date(order.createdAt);
+      const orderDate = order.createdAt ? new Date((order.createdAt as any).toDate?.() || order.createdAt) : new Date(0);
       const today = new Date();
       if (orderDate.toDateString() === today.toDateString() && order.status !== 'dibatalkan') {
         acc.revenue += order.totalPrice;
@@ -148,7 +148,7 @@ export const AdminDashboard = () => {
 
   const revenueHistory = orders.reduce((acc, order) => {
     if (order.status !== 'dibatalkan') {
-      const dateObj = new Date(order.createdAt);
+      const dateObj = order.createdAt ? new Date((order.createdAt as any).toDate?.() || order.createdAt) : new Date(0);
       const dateStr = dateObj.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
       const monthYearStr = dateObj.toLocaleDateString('id-ID', { year: 'numeric', month: 'long' });
       const rawDate = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()).getTime();
@@ -184,7 +184,7 @@ export const AdminDashboard = () => {
     const matchStatus = orderStatusFilter === 'Semua' || o.status === orderStatusFilter;
     let matchDate = true;
     if (orderDateFilter) {
-      const orderDate = new Date(o.createdAt);
+      const orderDate = o.createdAt ? new Date((o.createdAt as any).toDate?.() || o.createdAt) : new Date(0);
       const filterParts = orderDateFilter.split('-');
       if (filterParts.length === 3) {
         const fYear = parseInt(filterParts[0], 10);
@@ -297,7 +297,7 @@ export const AdminDashboard = () => {
                     <tr key={order.id}>
                       <td className="py-4">
                         <p className="text-sm font-medium text-gray-900 mb-1">
-                          {new Date(order.createdAt).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })}
+                          {order.createdAt ? new Date((order.createdAt as any).toDate?.() || order.createdAt).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' }) : 'Tanggal tidak valid'}
                         </p>
                         <p className="text-xs text-gray-500 font-mono">ID: {order.id.slice(0,6)}</p>
                       </td>

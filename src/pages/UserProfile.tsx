@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { LogOut, Package } from 'lucide-react';
 import { Order } from '../types';
 import { db, auth } from '../firebase';
-import { collection, query, onSnapshot, orderBy } from 'firebase/firestore';
+import { collection, query, onSnapshot, orderBy, where } from 'firebase/firestore';
 import { signOut } from 'firebase/auth';
 
 export const UserProfile = () => {
@@ -20,7 +20,11 @@ export const UserProfile = () => {
     
     if (!db) return;
 
-    const qOrders = query(collection(db, 'orders'), orderBy('createdAt', 'desc'));
+    const qOrders = query(
+      collection(db, 'orders'),
+      where('userId', '==', user.uid),
+      orderBy('createdAt', 'desc')
+    );
     const unsubscribe = onSnapshot(qOrders, (snapshot) => {
       setOrders(snapshot.docs.map(d => ({ id: d.id, ...d.data() } as Order)));
     }, (error) => console.error(error));
@@ -65,7 +69,7 @@ export const UserProfile = () => {
                     <div>
                       <p className="text-sm text-gray-500 font-mono">ID: {order.id}</p>
                       <p className="font-medium text-gray-900 mt-1">
-                        {new Date(order.createdAt).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })}
+                        {order.createdAt ? new Date((order.createdAt as any).toDate?.() || order.createdAt).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' }) : 'Tanggal tidak valid'}
                       </p>
                     </div>
                     <span className={`px-3 py-1 rounded-full text-xs font-medium uppercase ${
