@@ -1,0 +1,6 @@
+{
+  "name": "SidoMukti",
+  "description": "Platform e-commerce modern untuk UMKM jualan sayuran bernama SidoMukti.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
