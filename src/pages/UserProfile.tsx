@@ -64,9 +64,9 @@ export const UserProfile = () => {
           </button>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-            <Package className="w-5 h-5 text-green-600" /> Riwayat Pesanan (Demo)
+            <Package className="w-5 h-5 text-green-600" /> Riwayat Pesanan
           </h2>
           
           {orders.length === 0 ? (

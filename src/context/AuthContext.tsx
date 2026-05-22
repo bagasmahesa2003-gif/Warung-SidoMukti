@@ -22,30 +22,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(false);
       return;
     }
-    
-    let unsubscribe: () => void;
-    
-    // Set persistence first, then attach the listener
-    import('firebase/auth').then(({ setPersistence, browserLocalPersistence }) => {
-      setPersistence(auth, browserLocalPersistence)
-        .then(() => {
-          unsubscribe = onAuthStateChanged(auth, (u) => {
-            setUser(u);
-            setLoading(false);
-          });
-        })
-        .catch((err) => {
-          console.error("Persistence error", err);
-          unsubscribe = onAuthStateChanged(auth, (u) => {
-            setUser(u);
-            setLoading(false);
-          });
-        });
-    });
 
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
+    import('firebase/auth').then(({ setPersistence, browserLocalPersistence, onAuthStateChanged }) => {
+      setPersistence(auth, browserLocalPersistence).catch(console.error).finally(() => {
+        onAuthStateChanged(auth, (u) => {
+          setUser(u);
+          setLoading(false);
+        });
+      });
+    });
   }, []);
 
   const loginMock = (role: 'admin' | 'buyer' = 'admin') => {

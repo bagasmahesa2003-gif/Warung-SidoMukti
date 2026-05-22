@@ -207,31 +207,31 @@ export const AdminDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex pt-16">
-      {/* Sidebar */}
-      <div className="w-64 bg-white border-r border-gray-200 p-6 flex flex-col h-[calc(100vh-64px)] fixed">
-        <h2 className="text-xl font-bold text-gray-800 mb-8">Admin Dashboard</h2>
-        <div className="space-y-2 flex-1">
+    <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row pt-16">
+      {/* Sidebar - Horizontal on Mobile, Vertical on Desktop */}
+      <div className="w-full md:w-64 bg-white border-b md:border-b-0 md:border-r border-gray-200 p-4 md:p-6 flex flex-row md:flex-col gap-4 md:h-[calc(100vh-64px)] md:sticky top-16 z-10 overflow-x-auto hide-scrollbar">
+        <h2 className="text-xl font-bold text-gray-800 hidden md:block mb-4">Admin Dashboard</h2>
+        <div className="flex flex-row md:flex-col gap-2 flex-1 min-w-max md:min-w-0">
           <button 
             onClick={() => setActiveTab('orders')}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition ${activeTab === 'orders' ? 'bg-green-50 text-green-700 font-semibold' : 'text-gray-600 hover:bg-gray-50'}`}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl transition ${activeTab === 'orders' ? 'bg-green-50 text-green-700 font-semibold' : 'text-gray-600 hover:bg-gray-50'}`}
           >
-            <ShoppingBag className="w-5 h-5" /> Pesanan
+            <ShoppingBag className="w-5 h-5" /> <span className="whitespace-nowrap">Pesanan</span>
           </button>
           <button 
             onClick={() => setActiveTab('products')}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition ${activeTab === 'products' ? 'bg-green-50 text-green-700 font-semibold' : 'text-gray-600 hover:bg-gray-50'}`}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl transition ${activeTab === 'products' ? 'bg-green-50 text-green-700 font-semibold' : 'text-gray-600 hover:bg-gray-50'}`}
           >
-            <Package className="w-5 h-5" /> Produk
+            <Package className="w-5 h-5" /> <span className="whitespace-nowrap">Produk</span>
           </button>
         </div>
-        <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 rounded-xl transition mt-auto">
-          <LogOut className="w-5 h-5" /> Keluar
+        <button onClick={handleLogout} className="flex items-center gap-2 px-4 py-2.5 text-red-600 hover:bg-red-50 rounded-xl transition md:mt-auto">
+          <LogOut className="w-5 h-5" /> <span className="whitespace-nowrap hidden sm:block md:block">Keluar</span>
         </button>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 ml-64 p-8">
+      <div className="flex-1 p-4 sm:p-6 lg:p-8 w-full overflow-x-hidden">
         
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
