@@ -140,7 +140,7 @@ export const AdminDashboard = () => {
       const orderDate = order.createdAt ? new Date((order.createdAt as any).toDate?.() || order.createdAt) : new Date(0);
       const today = new Date();
       if (orderDate.toDateString() === today.toDateString() && order.status !== 'dibatalkan') {
-        acc.revenue += order.totalPrice;
+        acc.revenue += Number(order.total || order.totalPrice || 0);
         acc.count += 1;
       }
       return acc;
@@ -159,7 +159,7 @@ export const AdminDashboard = () => {
         acc[dateStr] = { count: 0, revenue: 0, rawDate, monthYearStr };
       }
       acc[dateStr].count += 1;
-      acc[dateStr].revenue += order.totalPrice;
+      acc[dateStr].revenue += Number(order.total || order.totalPrice || 0);
     }
     return acc;
   }, {} as Record<string, { count: number, revenue: number, rawDate: number, monthYearStr: string }>);
