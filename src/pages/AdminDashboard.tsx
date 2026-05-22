@@ -290,8 +290,8 @@ export const AdminDashboard = () => {
                 </div>
               </div>
             </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left">
+            <div className="overflow-x-auto pb-4 custom-scrollbar">
+              <table className="w-full text-left min-w-[900px]">
                 <thead>
                   <tr className="border-b border-gray-100 text-gray-500 text-sm">
                     <th className="pb-4 font-medium">Waktu & Tanggal</th>
@@ -309,11 +309,21 @@ export const AdminDashboard = () => {
                         </p>
                         <p className="text-xs text-gray-500 font-mono">ID: {order.id.slice(0,6)}</p>
                       </td>
-                      <td className="py-4">
-                        <p className="font-medium text-gray-900">{order.customerName}</p>
-                        <p className="text-xs text-gray-500">{order.phone}</p>
+                      <td className="py-4 min-w-[200px]">
+                        <p className="font-medium text-gray-900">{order.namaLengkap || order.customerName}</p>
+                        <p className="text-xs text-gray-500 mt-1">📞 {order.nomorHP || order.phone}</p>
+                        <div className="mt-2 space-y-1">
+                          <p className="text-xs font-medium text-gray-600 bg-gray-100 inline-block px-2 py-0.5 rounded">
+                            {order.metodePengiriman || order.deliveryMethod === 'delivery' ? 'Dikirim' : 'Ambil di Toko'}
+                          </p>
+                          {((order.metodePengiriman === 'Dikirim' || order.deliveryMethod === 'delivery') && (order.alamatLengkap || order.address)) && (
+                            <p className="text-xs text-gray-500 border-l-2 border-gray-200 pl-2">
+                              {order.alamatLengkap || order.address}
+                            </p>
+                          )}
+                        </div>
                       </td>
-                      <td className="py-4 font-semibold text-green-700">Rp {order.totalPrice.toLocaleString('id-ID')}</td>
+                      <td className="py-4 font-semibold text-green-700">Rp {(order.total || order.totalPrice || 0).toLocaleString('id-ID')}</td>
                       <td className="py-4">
                         <select 
                           value={order.status}
@@ -365,8 +375,8 @@ export const AdminDashboard = () => {
                 </button>
               </div>
             </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left">
+            <div className="overflow-x-auto pb-4 custom-scrollbar">
+              <table className="w-full text-left min-w-[600px]">
                 <thead>
                   <tr className="border-b border-gray-100 text-gray-500 text-sm">
                     <th className="pb-4 font-medium">Sayuran</th>

@@ -39,13 +39,14 @@ export const Cart = () => {
 
         addMockOrder({
           id: 'ORD-' + Math.random().toString().substring(2, 8),
-          customerName: formData.name,
-          address: formData.deliveryMethod === 'pickup' ? 'Ambil di Toko' : formData.address,
-          phone: formData.deliveryMethod === 'pickup' ? '-' : formData.phone,
-          paymentMethod: formData.paymentMethod as any,
-          deliveryMethod: formData.deliveryMethod,
+          userId: user.uid,
+          userEmail: user.email || '',
+          namaLengkap: formData.name,
+          alamatLengkap: formData.deliveryMethod === 'pickup' ? '' : formData.address,
+          nomorHP: formData.phone,
+          metodePengiriman: formData.deliveryMethod === 'pickup' ? 'Ambil di Toko' : 'Dikirim',
           items: cart,
-          totalPrice: cartTotal,
+          total: cartTotal,
           status: 'diproses',
           createdAt: Date.now()
         });
@@ -63,13 +64,12 @@ export const Cart = () => {
       const orderData = {
         userId: user.uid,
         userEmail: user.email || '',
-        customerName: formData.name,
-        address: formData.deliveryMethod === 'pickup' ? 'Ambil di Toko' : formData.address,
-        phone: formData.deliveryMethod === 'pickup' ? '-' : formData.phone,
-        paymentMethod: formData.paymentMethod,
-        deliveryMethod: formData.deliveryMethod,
+        namaLengkap: formData.name,
+        alamatLengkap: formData.deliveryMethod === 'pickup' ? '' : formData.address,
+        nomorHP: formData.phone,
+        metodePengiriman: formData.deliveryMethod === 'pickup' ? 'Ambil di Toko' : 'Dikirim',
         items: cart,
-        totalPrice: cartTotal,
+        total: cartTotal,
         status: 'diproses',
         createdAt: serverTimestamp(),
       };
@@ -132,22 +132,22 @@ export const Cart = () => {
                 <motion.div 
                   initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                   key={item.product.id} 
-                  className="bg-white rounded-xl p-4 flex gap-4 border border-gray-100 shadow-sm"
+                  className="bg-white rounded-xl p-4 flex flex-col sm:flex-row gap-4 border border-gray-100 shadow-sm"
                 >
-                  <div className="w-24 h-24 bg-gray-100 rounded-lg overflow-hidden shrink-0">
+                  <div className="w-full sm:w-24 h-48 sm:h-24 bg-gray-100 rounded-lg overflow-hidden shrink-0">
                     {item.product.imageUrl && (
                       <img src={item.product.imageUrl} alt={item.product.name} className="w-full h-full object-cover" />
                     )}
                   </div>
                   <div className="flex-1 flex flex-col justify-between">
                     <div>
-                      <h3 className="font-semibold text-gray-900">{item.product.name}</h3>
+                      <h3 className="font-semibold text-gray-900 line-clamp-2">{item.product.name}</h3>
                       <p className="text-sm text-gray-500">{item.product.category}</p>
                     </div>
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between mt-4 sm:mt-0">
                       <span className="font-bold text-green-700">Rp {(item.product.price * item.quantity).toLocaleString('id-ID')}</span>
-                      <div className="flex items-center gap-4">
-                        <span className="text-sm border border-gray-200 px-3 py-1 rounded-md">Qty: {item.quantity}</span>
+                      <div className="flex items-center gap-2 sm:gap-4">
+                        <span className="text-sm border border-gray-200 px-3 py-1.5 rounded-md">Qty: {item.quantity}</span>
                         <button onClick={() => removeFromCart(item.product.id)} className="text-red-500 hover:bg-red-50 p-2 rounded-md transition-colors">
                           <Trash2 className="w-5 h-5" />
                         </button>
@@ -195,19 +195,18 @@ export const Cart = () => {
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-green-500" />
                 </div>
                 
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Nomor HP / WA</label>
+                  <input required type="tel" value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-green-500" />
+                </div>
+                
                 {formData.deliveryMethod === 'delivery' && (
-                  <>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Nomor HP / WA</label>
-                      <input required type="tel" value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })}
-                        className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-green-500" />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Alamat Lengkap</label>
-                      <textarea required value={formData.address} onChange={e => setFormData({ ...formData, address: e.target.value })} rows={3}
-                        className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-green-500" />
-                    </div>
-                  </>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Alamat Lengkap</label>
+                    <textarea required value={formData.address} onChange={e => setFormData({ ...formData, address: e.target.value })} rows={3}
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-green-500" />
+                  </div>
                 )}
                 
                 <div>

@@ -24,11 +24,16 @@ export const UserProfile = () => {
 
     const qOrders = query(
       collection(db, 'orders'),
-      where('userId', '==', user.uid),
-      orderBy('createdAt', 'desc')
+      where('userId', '==', user.uid)
     );
     const unsubscribe = onSnapshot(qOrders, (snapshot) => {
-      setOrders(snapshot.docs.map(d => ({ id: d.id, ...d.data() } as Order)));
+      const data = snapshot.docs.map(d => ({ id: d.id, ...d.data() } as Order));
+      data.sort((a, b) => {
+        const timeA = a.createdAt ? (typeof a.createdAt === 'number' ? a.createdAt : (a.createdAt as any).toDate?.().getTime() || 0) : 0;
+        const timeB = b.createdAt ? (typeof b.createdAt === 'number' ? b.createdAt : (b.createdAt as any).toDate?.().getTime() || 0) : 0;
+        return timeB - timeA;
+      });
+      setOrders(data);
     }, (error) => console.error(error));
 
     return () => unsubscribe();
@@ -102,11 +107,19 @@ export const UserProfile = () => {
                     ))}
                   </div>
                   
-                  <div className="border-t border-gray-100 pt-3 flex justify-between items-center">
-                    <span className="text-sm text-gray-500">Total Pembayaran ({order.paymentMethod})</span>
+                  <div className="border-t border-gray-100 pt-3 flex justify-between items-center mb-3">
+                    <span className="text-sm text-gray-500">Total Pembayaran</span>
                     <span className="font-bold text-green-700 text-lg">
-                      Rp {order.totalPrice.toLocaleString('id-ID')}
+                      Rp {(order.total || order.totalPrice || 0).toLocaleString('id-ID')}
                     </span>
+                  </div>
+                  
+                  <div className="bg-gray-50 p-3 rounded-lg text-sm space-y-1">
+                    <p><span className="text-gray-500">Metode Pengiriman:</span> <span className="font-medium text-gray-900">{order.metodePengiriman || order.deliveryMethod}</span></p>
+                    {((order.metodePengiriman === 'Dikirim' || order.deliveryMethod === 'delivery') && (order.alamatLengkap || order.address)) && (
+                      <p><span className="text-gray-500">Alamat:</span> <span className="font-medium text-gray-900">{order.alamatLengkap || order.address}</span></p>
+                    )}
+                    <p><span className="text-gray-500">Nomor HP:</span> <span className="font-medium text-gray-900">{order.nomorHP || order.phone}</span></p>
                   </div>
                 </div>
               ))}

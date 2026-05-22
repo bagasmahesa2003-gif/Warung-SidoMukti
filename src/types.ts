@@ -15,15 +15,22 @@ export interface CartItem {
 
 export interface Order {
   id: string;
-  customerName: string;
-  address: string;
-  phone: string;
-  paymentMethod: 'COD' | 'Transfer';
-  deliveryMethod?: 'pickup' | 'delivery';
+  userId?: string;
+  userEmail?: string;
+  customerName?: string; // Legacy
+  namaLengkap?: string;
+  address?: string; // Legacy
+  alamatLengkap?: string;
+  phone?: string; // Legacy
+  nomorHP?: string;
+  paymentMethod?: 'COD' | 'Transfer'; // Legacy
+  deliveryMethod?: 'pickup' | 'delivery'; // Legacy
+  metodePengiriman?: 'Ambil di Toko' | 'Dikirim';
   items: CartItem[];
-  totalPrice: number;
-  status: 'diproses' | 'dikirim' | 'selesai';
-  createdAt: number;
+  totalPrice?: number; // Legacy
+  total?: number;
+  status: 'diproses' | 'dikirim' | 'selesai' | 'dibatalkan';
+  createdAt: any;
   read?: boolean;
 }
 
