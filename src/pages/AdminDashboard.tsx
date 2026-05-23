@@ -296,6 +296,7 @@ export const AdminDashboard = () => {
                   <tr className="border-b border-gray-100 text-gray-500 text-sm">
                     <th className="pb-4 font-medium">Waktu & Tanggal</th>
                     <th className="pb-4 font-medium">Pelanggan</th>
+                    <th className="pb-4 font-medium">Pesanan</th>
                     <th className="pb-4 font-medium">Total</th>
                     <th className="pb-4 font-medium">Status</th>
                   </tr>
@@ -321,6 +322,15 @@ export const AdminDashboard = () => {
                               {order.alamatLengkap || order.address}
                             </p>
                           )}
+                        </div>
+                      </td>
+                      <td className="py-4 min-w-[200px]">
+                        <div className="space-y-1">
+                          {order.items?.map((item, idx) => (
+                            <div key={idx} className="text-sm text-gray-700">
+                              • {item.product.name} x {item.quantity}
+                            </div>
+                          ))}
                         </div>
                       </td>
                       <td className="py-4 font-semibold text-green-700">Rp {(order.total || order.total || 0).toLocaleString('id-ID')}</td>
