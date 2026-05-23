@@ -140,7 +140,7 @@ export const AdminDashboard = () => {
       const orderDate = order.createdAt ? new Date((order.createdAt as any).toDate?.() || order.createdAt) : new Date(0);
       const today = new Date();
       if (orderDate.toDateString() === today.toDateString() && order.status !== 'dibatalkan') {
-        acc.revenue += Number(order.total || order.totalPrice || 0);
+        acc.revenue += Number(order.total || order.total || 0);
         acc.count += 1;
       }
       return acc;
@@ -159,7 +159,7 @@ export const AdminDashboard = () => {
         acc[dateStr] = { count: 0, revenue: 0, rawDate, monthYearStr };
       }
       acc[dateStr].count += 1;
-      acc[dateStr].revenue += Number(order.total || order.totalPrice || 0);
+      acc[dateStr].revenue += Number(order.total || order.total || 0);
     }
     return acc;
   }, {} as Record<string, { count: number, revenue: number, rawDate: number, monthYearStr: string }>);
@@ -323,7 +323,7 @@ export const AdminDashboard = () => {
                           )}
                         </div>
                       </td>
-                      <td className="py-4 font-semibold text-green-700">Rp {(order.total || order.totalPrice || 0).toLocaleString('id-ID')}</td>
+                      <td className="py-4 font-semibold text-green-700">Rp {(order.total || order.total || 0).toLocaleString('id-ID')}</td>
                       <td className="py-4">
                         <select 
                           value={order.status}
