@@ -16,10 +16,17 @@ export const Cart = () => {
   const [formData, setFormData] = useState({
     name: '',
     address: '',
-    phone: '',
+    phone: user?.phoneNumber || '',
     paymentMethod: 'COD',
     deliveryMethod: 'delivery' as 'pickup' | 'delivery'
   });
+
+  // Perbarui phone jika user object baru load
+  React.useEffect(() => {
+    if (user?.phoneNumber) {
+      setFormData(prev => ({...prev, phone: user.phoneNumber!}));
+    }
+  }, [user]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(false);
 
