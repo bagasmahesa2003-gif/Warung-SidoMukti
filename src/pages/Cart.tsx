@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
-import { Trash2, ArrowLeft, CheckCircle } from 'lucide-react';
+import { Trash2, ArrowLeft, CheckCircle, Minus, Plus } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { collection, addDoc, serverTimestamp, doc, updateDoc, increment } from 'firebase/firestore';
 import { db, handleFirestoreError, OperationType } from '../firebase';
@@ -9,7 +9,7 @@ import { motion } from 'motion/react';
 import { addMockOrder, reduceMockProductStock } from '../utils/mockDb';
 
 export const Cart = () => {
-  const { cart, removeFromCart, cartTotal, clearCart } = useCart();
+  const { cart, removeFromCart, updateQuantity, cartTotal, clearCart } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
   
@@ -147,8 +147,26 @@ export const Cart = () => {
                     <div className="flex items-center justify-between mt-4 sm:mt-0">
                       <span className="font-bold text-green-700">Rp {(item.product.price * item.quantity).toLocaleString('id-ID')}</span>
                       <div className="flex items-center gap-2 sm:gap-4">
-                        <span className="text-sm border border-gray-200 px-3 py-1.5 rounded-md">Qty: {item.quantity}</span>
-                        <button onClick={() => removeFromCart(item.product.id)} className="text-red-500 hover:bg-red-50 p-2 rounded-md transition-colors">
+                        <div className="flex items-center border border-gray-200 rounded-md overflow-hidden bg-white">
+                          <button 
+                            type="button"
+                            onClick={() => updateQuantity(item.product.id, -1)}
+                            className="bg-gray-50 p-2 text-gray-600 hover:bg-gray-100 transition-colors"
+                          >
+                            <Minus className="w-4 h-4" />
+                          </button>
+                          <span className="text-sm font-medium px-3 flex-1 text-center min-w-[2.5rem]">
+                            {item.quantity}
+                          </span>
+                          <button 
+                            type="button"
+                            onClick={() => updateQuantity(item.product.id, 1)}
+                            className="bg-gray-50 p-2 text-gray-600 hover:bg-gray-100 transition-colors"
+                          >
+                            <Plus className="w-4 h-4" />
+                          </button>
+                        </div>
+                        <button type="button" onClick={() => removeFromCart(item.product.id)} className="text-red-500 hover:bg-red-50 p-2 rounded-md transition-colors">
                           <Trash2 className="w-5 h-5" />
                         </button>
                       </div>
@@ -216,6 +234,11 @@ export const Cart = () => {
                     <option value="COD">Bayar di Tempat (COD)</option>
                     <option value="Transfer">Transfer Bank</option>
                   </select>
+                  {formData.paymentMethod === 'Transfer' && (
+                    <p className="text-sm text-green-600 mt-2">
+                      Konfirmasi pembayaran lewat WhatsApp setelah melakukan transfer.
+                    </p>
+                  )}
                 </div>
                 
                 <div className="border-t border-gray-200 pt-4 mt-4">

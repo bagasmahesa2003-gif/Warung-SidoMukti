@@ -5,6 +5,7 @@ interface CartContextType {
   cart: CartItem[];
   addToCart: (product: Product) => void;
   removeFromCart: (productId: string) => void;
+  updateQuantity: (productId: string, delta: number) => void;
   clearCart: () => void;
   cartTotal: number;
 }
@@ -40,12 +41,27 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setCart(prev => prev.filter(item => item.product.id !== productId));
   };
 
+  const updateQuantity = (productId: string, delta: number) => {
+    setCart(prev => prev.map(item => {
+      if (item.product.id === productId) {
+        const newQuantity = item.quantity + delta;
+        if (newQuantity < 1) return item;
+        if (newQuantity > item.product.stock) {
+          alert('Maaf, pesanan melebihi stok yang tersedia.');
+          return item;
+        }
+        return { ...item, quantity: newQuantity };
+      }
+      return item;
+    }));
+  };
+
   const clearCart = () => setCart([]);
 
   const cartTotal = cart.reduce((total, item) => total + (item.product.price * item.quantity), 0);
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, cartTotal }}>
+    <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity, clearCart, cartTotal }}>
       {children}
     </CartContext.Provider>
   );
